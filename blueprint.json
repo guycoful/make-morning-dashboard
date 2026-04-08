@@ -1,0 +1,256 @@
+{
+  "name": "דשבורד בוקר - מייל יומי עם לו\"ז",
+  "flow": [
+    {
+      "id": 1,
+      "module": "google-calendar:searchEvents",
+      "version": 5,
+      "parameters": {
+        "__IMTCONN__": 1
+      },
+      "mapper": {
+        "calendarId": "primary",
+        "timeMin": "{{formatDate(now; \"YYYY-MM-DD\")}}T00:00:00Z",
+        "timeMax": "{{formatDate(now; \"YYYY-MM-DD\")}}T23:59:59Z",
+        "singleEvents": true,
+        "orderBy": "startTime",
+        "maxResults": "20"
+      },
+      "metadata": {
+        "designer": { "x": 0, "y": 0 },
+        "restore": {
+          "parameters": {
+            "__IMTCONN__": {
+              "label": "Google Calendar Connection",
+              "data": { "scoped": "true", "connection": "google" }
+            }
+          },
+          "expect": {
+            "calendarId": { "mode": "chose", "label": "Primary" },
+            "singleEvents": { "mode": "chose", "label": "Yes" },
+            "orderBy": { "mode": "chose", "label": "Start Time" }
+          }
+        },
+        "parameters": [
+          { "name": "__IMTCONN__", "type": "account:google", "label": "Connection", "required": true }
+        ]
+      }
+    },
+    {
+      "id": 2,
+      "module": "google-calendar:searchEvents",
+      "version": 5,
+      "parameters": {
+        "__IMTCONN__": 1
+      },
+      "mapper": {
+        "calendarId": "primary",
+        "timeMin": "{{formatDate(addDays(now; 1); \"YYYY-MM-DD\")}}T00:00:00Z",
+        "timeMax": "{{formatDate(addDays(now; 1); \"YYYY-MM-DD\")}}T23:59:59Z",
+        "singleEvents": true,
+        "orderBy": "startTime",
+        "maxResults": "20"
+      },
+      "metadata": {
+        "designer": { "x": 300, "y": 0 },
+        "restore": {
+          "parameters": {
+            "__IMTCONN__": {
+              "label": "Google Calendar Connection",
+              "data": { "scoped": "true", "connection": "google" }
+            }
+          },
+          "expect": {
+            "calendarId": { "mode": "chose", "label": "Primary" },
+            "singleEvents": { "mode": "chose", "label": "Yes" },
+            "orderBy": { "mode": "chose", "label": "Start Time" }
+          }
+        },
+        "parameters": [
+          { "name": "__IMTCONN__", "type": "account:google", "label": "Connection", "required": true }
+        ]
+      }
+    },
+    {
+      "id": 3,
+      "module": "util:TextAggregator",
+      "version": 1,
+      "parameters": {
+        "feederModule": 1
+      },
+      "mapper": {
+        "rowSeparator": "",
+        "text": "<tr>\n  <td style=\"padding:8px 12px;border-bottom:1px solid #eee;font-weight:600;color:#1B2A4A;width:80px;text-align:right\">{{formatDate(1.start; \"HH:mm\")}}</td>\n  <td style=\"padding:8px 12px;border-bottom:1px solid #eee;text-align:right\">\n    <div style=\"font-weight:600;color:#1B2A4A\">{{1.summary}}</div>\n    {{if(1.location; \"<div style='font-size:12px;color:#888'>\u00f0\u009f\u0093\u008d \" + 1.location + \"</div>\"; \"\")}}\n    {{if(1.hangoutLink; \"<div style='font-size:12px'><a href='\" + 1.hangoutLink + \"' style='color:#7C3AED'>\u00f0\u009f\u0094\u0097 \u05d4\u05e6\u05d8\u05e8\u05e3 \u05dc\u05e9\u05d9\u05d7\u05d4</a></div>\"; \"\")}}\n  </td>\n</tr>"
+      },
+      "metadata": {
+        "designer": { "x": 600, "y": 0 },
+        "restore": {
+          "parameters": {
+            "feederModule": { "label": "Google Calendar - Search Events [1]" }
+          }
+        },
+        "parameters": [
+          { "name": "feederModule", "type": "select", "label": "Source Module", "required": true }
+        ],
+        "expect": [
+          { "name": "rowSeparator", "type": "text", "label": "Row separator" },
+          { "name": "text", "type": "text", "label": "Text" }
+        ]
+      }
+    },
+    {
+      "id": 4,
+      "module": "util:TextAggregator",
+      "version": 1,
+      "parameters": {
+        "feederModule": 2
+      },
+      "mapper": {
+        "rowSeparator": "",
+        "text": "{{formatDate(2.start; \"HH:mm\")}} - {{2.summary}}\n"
+      },
+      "metadata": {
+        "designer": { "x": 900, "y": 0 },
+        "restore": {
+          "parameters": {
+            "feederModule": { "label": "Google Calendar - Search Events [2]" }
+          }
+        },
+        "parameters": [
+          { "name": "feederModule", "type": "select", "label": "Source Module", "required": true }
+        ],
+        "expect": [
+          { "name": "rowSeparator", "type": "text", "label": "Row separator" },
+          { "name": "text", "type": "text", "label": "Text" }
+        ]
+      }
+    },
+    {
+      "id": 5,
+      "module": "builtin:BasicRouter",
+      "version": 1,
+      "parameters": {},
+      "mapper": {},
+      "routes": [
+        {
+          "flow": [
+            {
+              "id": 6,
+              "module": "google-email:sendAnEmail",
+              "version": 4,
+              "parameters": {
+                "__IMTCONN__": 2
+              },
+              "filter": {
+                "name": "יש אירועים היום",
+                "conditions": [
+                  [
+                    {
+                      "a": "{{3.text}}",
+                      "o": "text:exist"
+                    }
+                  ]
+                ]
+              },
+              "mapper": {
+                "to": ["__YOUR_EMAIL__"],
+                "subject": "\u2600\ufe0f \u05d4\u05dc\u05d5\"\u05d6 \u05e9\u05dc\u05da \u05dc\u05d4\u05d9\u05d5\u05dd - {{formatDate(now; \"DD/MM/YYYY\")}}",
+                "bodyType": "rawHtml",
+                "body": "<!DOCTYPE html>\n<html dir=\"rtl\" lang=\"he\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n</head>\n<body style=\"margin:0;padding:0;background-color:#f4f4f7;font-family:Arial,Helvetica,sans-serif;direction:rtl\">\n  <table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"background-color:#f4f4f7\">\n    <tr>\n      <td align=\"center\" style=\"padding:24px 16px\">\n        <table role=\"presentation\" width=\"600\" cellspacing=\"0\" cellpadding=\"0\" style=\"max-width:600px;width:100%;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)\">\n          <!-- Header -->\n          <tr>\n            <td style=\"background:linear-gradient(135deg,#1B2A4A 0%,#2d3f6b 100%);padding:32px 24px;text-align:center\">\n              <div style=\"font-size:32px;margin-bottom:8px\">{{if(formatDate(now;\"H\") < 12; \"\u2600\ufe0f\"; if(formatDate(now;\"H\") < 17; \"\u00f0\u009f\u008c\u00a4\ufe0f\"; \"\u00f0\u009f\u008c\u0099\"))}}</div>\n              <h1 style=\"margin:0;color:#ffffff;font-size:24px;font-weight:700\">{{if(formatDate(now;\"H\") < 12; \"\u05d1\u05d5\u05e7\u05e8 \u05d8\u05d5\u05d1\"; if(formatDate(now;\"H\") < 17; \"\u05e6\u05d4\u05e8\u05d9\u05d9\u05dd \u05d8\u05d5\u05d1\u05d9\u05dd\"; \"\u05e2\u05e8\u05d1 \u05d8\u05d5\u05d1\"))}}, \u05d2\u05d9\u05d0!</h1>\n              <p style=\"margin:8px 0 0;color:rgba(255,255,255,0.8);font-size:14px\">{{formatDate(now; \"dddd, DD \u05d1MMMM YYYY\")}}</p>\n            </td>\n          </tr>\n\n          <!-- Today's Events Section -->\n          <tr>\n            <td style=\"padding:24px\">\n              <table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\">\n                <tr>\n                  <td style=\"padding-bottom:16px\">\n                    <h2 style=\"margin:0;color:#1B2A4A;font-size:18px;font-weight:700;border-right:4px solid #7C3AED;padding-right:12px\">\u00f0\u009f\u0093\u0085 \u05d4\u05d0\u05d9\u05e8\u05d5\u05e2\u05d9\u05dd \u05e9\u05dc\u05da \u05dc\u05d4\u05d9\u05d5\u05dd</h2>\n                  </td>\n                </tr>\n              </table>\n              <table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"border:1px solid #eee;border-radius:8px;overflow:hidden\">\n                {{3.text}}\n              </table>\n            </td>\n          </tr>\n\n          <!-- Tomorrow Preview Section -->\n          {{if(4.text; \"<tr><td style='padding:0 24px 24px'><table role='presentation' width='100%' cellspacing='0' cellpadding='0'><tr><td style='background-color:#f8f7ff;border-radius:8px;padding:16px'><h3 style='margin:0 0 8px;color:#7C3AED;font-size:15px;font-weight:700'>\u00f0\u009f\u0094\u00ae \u05d4\u05e6\u05e6\u05d4 \u05dc\u05de\u05d7\u05e8</h3><pre style='margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#555;white-space:pre-wrap;line-height:1.6'>\" + 4.text + \"</pre></td></tr></table></td></tr>\"; \"\")}}\n\n          <!-- Footer -->\n          <tr>\n            <td style=\"padding:16px 24px;background-color:#f9fafb;text-align:center;border-top:1px solid #eee\">\n              <p style=\"margin:0;font-size:12px;color:#999\">\u05e0\u05d5\u05e6\u05e8 \u05d0\u05d5\u05d8\u05d5\u05de\u05d8\u05d9\u05ea \u05e2\u05dd Make.com | Guy Cohen AI Agency</p>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>"
+              },
+              "metadata": {
+                "designer": { "x": 1500, "y": -150 },
+                "restore": {
+                  "parameters": {
+                    "__IMTCONN__": {
+                      "label": "Gmail Connection",
+                      "data": { "scoped": "true", "connection": "google" }
+                    }
+                  },
+                  "expect": {
+                    "bodyType": { "mode": "chose", "label": "Raw HTML" }
+                  }
+                },
+                "parameters": [
+                  { "name": "__IMTCONN__", "type": "account:google", "label": "Connection", "required": true }
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "flow": [
+            {
+              "id": 7,
+              "module": "google-email:sendAnEmail",
+              "version": 4,
+              "parameters": {
+                "__IMTCONN__": 2
+              },
+              "filter": {
+                "name": "אין אירועים היום",
+                "conditions": [
+                  [
+                    {
+                      "a": "{{3.text}}",
+                      "o": "text:notexist"
+                    }
+                  ]
+                ]
+              },
+              "mapper": {
+                "to": ["__YOUR_EMAIL__"],
+                "subject": "\u00f0\u009f\u008e\u0089 \u05d9\u05d5\u05dd \u05d7\u05d5\u05e4\u05e9\u05d9! - {{formatDate(now; \"DD/MM/YYYY\")}}",
+                "bodyType": "rawHtml",
+                "body": "<!DOCTYPE html>\n<html dir=\"rtl\" lang=\"he\">\n<head>\n  <meta charset=\"UTF-8\">\n  <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n</head>\n<body style=\"margin:0;padding:0;background-color:#f4f4f7;font-family:Arial,Helvetica,sans-serif;direction:rtl\">\n  <table role=\"presentation\" width=\"100%\" cellspacing=\"0\" cellpadding=\"0\" style=\"background-color:#f4f4f7\">\n    <tr>\n      <td align=\"center\" style=\"padding:24px 16px\">\n        <table role=\"presentation\" width=\"600\" cellspacing=\"0\" cellpadding=\"0\" style=\"max-width:600px;width:100%;background-color:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)\">\n          <!-- Header -->\n          <tr>\n            <td style=\"background:linear-gradient(135deg,#1B2A4A 0%,#2d3f6b 100%);padding:32px 24px;text-align:center\">\n              <div style=\"font-size:48px;margin-bottom:8px\">\u00f0\u009f\u008e\u0089</div>\n              <h1 style=\"margin:0;color:#ffffff;font-size:24px;font-weight:700\">\u05d9\u05d5\u05dd \u05d7\u05d5\u05e4\u05e9\u05d9!</h1>\n              <p style=\"margin:8px 0 0;color:rgba(255,255,255,0.8);font-size:14px\">{{formatDate(now; \"dddd, DD \u05d1MMMM YYYY\")}}</p>\n            </td>\n          </tr>\n\n          <!-- No Events Message -->\n          <tr>\n            <td style=\"padding:40px 24px;text-align:center\">\n              <div style=\"font-size:48px;margin-bottom:16px\">\u00f0\u009f\u008f\u0096\ufe0f</div>\n              <h2 style=\"margin:0 0 8px;color:#1B2A4A;font-size:20px\">\u05d0\u05d9\u05df \u05e4\u05d2\u05d9\u05e9\u05d5\u05ea \u05d4\u05d9\u05d5\u05dd!</h2>\n              <p style=\"margin:0;color:#666;font-size:16px\">\u05ea\u05ea\u05e2\u05e0\u05d2, \u05d9\u05d5\u05dd \u05e4\u05ea\u05d5\u05d7 \u05dc\u05e2\u05d1\u05d5\u05d3\u05d4 \u05de\u05de\u05d5\u05e7\u05d3\u05ea \u05d0\u05d5 \u05dc\u05de\u05e0\u05d5\u05d7\u05d4 \u05de\u05d6\u05d5\u05de\u05e0\u05ea \u00f0\u009f\u008e\u0089</p>\n            </td>\n          </tr>\n\n          <!-- Tomorrow Preview Section -->\n          {{if(4.text; \"<tr><td style='padding:0 24px 24px'><table role='presentation' width='100%' cellspacing='0' cellpadding='0'><tr><td style='background-color:#f8f7ff;border-radius:8px;padding:16px'><h3 style='margin:0 0 8px;color:#7C3AED;font-size:15px;font-weight:700'>\u00f0\u009f\u0094\u00ae \u05d0\u05d1\u05dc \u05de\u05d7\u05e8 \u05d9\u05e9 \u05dc\u05da:</h3><pre style='margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:#555;white-space:pre-wrap;line-height:1.6'>\" + 4.text + \"</pre></td></tr></table></td></tr>\"; \"\")}}\n\n          <!-- Footer -->\n          <tr>\n            <td style=\"padding:16px 24px;background-color:#f9fafb;text-align:center;border-top:1px solid #eee\">\n              <p style=\"margin:0;font-size:12px;color:#999\">\u05e0\u05d5\u05e6\u05e8 \u05d0\u05d5\u05d8\u05d5\u05de\u05d8\u05d9\u05ea \u05e2\u05dd Make.com | Guy Cohen AI Agency</p>\n            </td>\n          </tr>\n        </table>\n      </td>\n    </tr>\n  </table>\n</body>\n</html>"
+              },
+              "metadata": {
+                "designer": { "x": 1500, "y": 150 },
+                "restore": {
+                  "parameters": {
+                    "__IMTCONN__": {
+                      "label": "Gmail Connection",
+                      "data": { "scoped": "true", "connection": "google" }
+                    }
+                  },
+                  "expect": {
+                    "bodyType": { "mode": "chose", "label": "Raw HTML" }
+                  }
+                },
+                "parameters": [
+                  { "name": "__IMTCONN__", "type": "account:google", "label": "Connection", "required": true }
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "metadata": {
+        "designer": { "x": 1200, "y": 0 }
+      }
+    }
+  ],
+  "metadata": {
+    "instant": false,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": false,
+      "slots": null,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false,
+      "freshVariables": false
+    },
+    "designer": { "orphans": [] },
+    "zone": "eu2.make.com",
+    "scheduling": {
+      "type": "indefinitely",
+      "interval": 86400,
+      "time": "06:30"
+    }
+  }
+}
