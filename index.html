@@ -3,11 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>תבנית Make.com - הלו"ז של הבוקר</title>
+<title>דשבורד בוקר - תבנית Make.com</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
   * { margin:0; padding:0; box-sizing:border-box; }
-  body { font-family:'Heebo',sans-serif; background:#0f0f1a; color:#e8e8f0; min-height:100vh; display:flex; align-items:center; justify-content:center; }
+  body { font-family:'Heebo',sans-serif; background:#0f0f1a; color:#e8e8f0; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px 0; }
   .card { max-width:600px; width:90%; background:linear-gradient(135deg,#1B2A4A 0%,#2a1a4a 100%); border-radius:20px; padding:40px; text-align:center; box-shadow:0 20px 60px rgba(0,0,0,0.5); }
   .badge { display:inline-block; background:#7C3AED; color:#fff; padding:4px 16px; border-radius:20px; font-size:14px; font-weight:500; margin-bottom:20px; }
   h1 { font-size:32px; font-weight:900; margin-bottom:8px; background:linear-gradient(135deg,#fff,#c4b5fd); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
@@ -18,8 +18,10 @@
   .feature-icon { font-size:24px; width:40px; text-align:center; flex-shrink:0; }
   .feature-text { font-size:15px; color:#c0c0d8; }
   .feature-text strong { color:#e8e8f0; }
-  .download-btn { display:inline-block; background:linear-gradient(135deg,#7C3AED,#6d28d9); color:#fff; padding:16px 48px; border-radius:12px; font-size:20px; font-weight:700; text-decoration:none; margin-top:24px; transition:all 0.3s; cursor:pointer; border:none; font-family:'Heebo',sans-serif; }
+  .download-btn { display:inline-block; background:linear-gradient(135deg,#7C3AED,#6d28d9); color:#fff; padding:16px 48px; border-radius:12px; font-size:20px; font-weight:700; text-decoration:none; margin-top:24px; transition:all 0.3s; }
   .download-btn:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(124,58,237,0.4); }
+  .guide-btn { display:inline-block; background:transparent; color:#c4b5fd; padding:12px 32px; border-radius:12px; font-size:16px; font-weight:600; text-decoration:none; margin-top:12px; border:2px solid rgba(196,181,253,0.3); transition:all 0.3s; }
+  .guide-btn:hover { border-color:#c4b5fd; background:rgba(196,181,253,0.08); }
   .meta { margin-top:24px; color:#888; font-size:13px; }
   .meta a { color:#7C3AED; text-decoration:none; }
   .stats { display:flex; justify-content:center; gap:30px; margin:20px 0; }
@@ -31,31 +33,33 @@
 </head>
 <body>
 <div class="card">
-  <div class="badge">Make.com Blueprint</div>
-  <h1>הלו"ז של הבוקר</h1>
-  <p class="subtitle">כל בוקר מקבלים מייל מעוצב עם כל הפגישות של היום, לינקים ל-Meet, והצצה למחר. אוטומטי לגמרי.</p>
+  <div class="badge">Make.com Blueprint v7</div>
+  <h1>דשבורד בוקר</h1>
+  <p class="subtitle">כל בוקר מקבלים מייל מעוצב עם רשימת הפגישות של היום. אם אין פגישות — הודעת יום חופשי. אוטומטי לגמרי.</p>
 
   <div class="stats">
-    <div class="stat"><div class="stat-num">7</div><div class="stat-label">מודולים</div></div>
-    <div class="stat"><div class="stat-num">~5</div><div class="stat-label">credits ליום</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">מודולים</div></div>
+    <div class="stat"><div class="stat-num">~3</div><div class="stat-label">credits ליום</div></div>
     <div class="stat"><div class="stat-num">0</div><div class="stat-label">API keys</div></div>
   </div>
 
   <div class="features">
-    <div class="feature"><div class="feature-icon">📅</div><div class="feature-text"><strong>Google Calendar</strong> - שולף את כל האירועים של היום ומחר</div></div>
-    <div class="feature"><div class="feature-icon">🔗</div><div class="feature-text"><strong>לינקים ל-Meet</strong> - מוכנים ללחיצה ישירות מהמייל</div></div>
+    <div class="feature"><div class="feature-icon">📅</div><div class="feature-text"><strong>Google Calendar</strong> - שולף את כל האירועים של היום אוטומטית</div></div>
+    <div class="feature"><div class="feature-icon">📋</div><div class="feature-text"><strong>רשימת פגישות עם שעות</strong> - כל אירוע עם שעת התחלה</div></div>
     <div class="feature"><div class="feature-icon">🧭</div><div class="feature-text"><strong>Router חכם</strong> - יש פגישות? דשבורד מלא. יום חופשי? הודעה שמחה</div></div>
     <div class="feature"><div class="feature-icon">🌅</div><div class="feature-text"><strong>ברכה לפי שעה</strong> - בוקר טוב / צהריים טובים / ערב טוב</div></div>
-    <div class="feature"><div class="feature-icon">🔮</div><div class="feature-text"><strong>הצצה למחר</strong> - כמה פגישות ומתי הראשונה</div></div>
+    <div class="feature"><div class="feature-icon">✉️</div><div class="feature-text"><strong>מייל מעוצב</strong> - Header Navy, רשימת אירועים, כפתור ליומן</div></div>
   </div>
 
-  <a class="download-btn" href="blueprint.json" download="morning_dashboard_blueprint.json">הורדת התבנית</a>
+  <a class="download-btn" href="blueprint.json" download="morning_dashboard_v7.json">⬇️ הורדת התבנית</a>
+  <br>
+  <a class="guide-btn" href="guide.pdf" target="_blank">📖 מדריך התקנה (PDF)</a>
 
-  <div class="free-badge">עובד בתוכנית החינמית של Make (1,000 credits/חודש)</div>
+  <div class="free-badge">✓ עובד בתוכנית החינמית של Make (1,000 credits/חודש)</div>
 
   <div class="meta">
-    <p>יצר: <a href="https://www.linkedin.com/in/guycohenai/" target="_blank">גיא כהן</a> | קהילת סוכנים, סדנאות ואוטומציות</p>
-    <p style="margin-top:8px">איך מייבאים? Scenarios > Create > ... > Import Blueprint > בחרו את הקובץ</p>
+    <p>יצר: <a href="https://www.linkedin.com/in/guycohenai/" target="_blank">גיא כהן</a> | קהילת AI ואוטומציות</p>
+    <p style="margin-top:8px">ייבוא: Scenarios → Create → ... → Import Blueprint → בחרו את הקובץ</p>
   </div>
 </div>
 </body>

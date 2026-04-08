@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>מדריך - דשבורד בוקר עם Make.com</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'Heebo',sans-serif; background:#fff; color:#1a1a2e; direction:rtl; font-size:14px; line-height:1.7; }
+
+  /* COVER PAGE */
+  .cover { background:linear-gradient(135deg,#1B2A4A 0%,#2d3f6b 100%); min-height:100vh; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:60px 40px; page-break-after:always; }
+  .cover-badge { background:#7C3AED; color:#fff; padding:6px 20px; border-radius:20px; font-size:14px; font-weight:600; margin-bottom:28px; display:inline-block; }
+  .cover h1 { font-size:52px; font-weight:900; color:#fff; margin-bottom:12px; }
+  .cover h2 { font-size:22px; color:rgba(255,255,255,0.7); font-weight:400; margin-bottom:48px; }
+  .cover-divider { width:60px; height:3px; background:#7C3AED; margin:0 auto 48px; }
+  .cover-features { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; max-width:600px; margin:0 auto; }
+  .cover-stat { background:rgba(255,255,255,0.08); border-radius:12px; padding:20px; }
+  .cover-stat-num { font-size:32px; font-weight:900; color:#c4b5fd; }
+  .cover-stat-label { font-size:13px; color:rgba(255,255,255,0.6); margin-top:4px; }
+  .cover-footer { margin-top:60px; color:rgba(255,255,255,0.4); font-size:13px; }
+  .cover-footer strong { color:rgba(255,255,255,0.7); }
+
+  /* CONTENT */
+  .page { padding:50px 60px; max-width:800px; margin:0 auto; }
+  .page-break { page-break-before:always; padding-top:50px; }
+
+  h2.section-title { font-size:26px; font-weight:900; color:#1B2A4A; margin-bottom:6px; padding-bottom:12px; border-bottom:3px solid #7C3AED; }
+  .section-intro { color:#555; margin-bottom:28px; font-size:15px; }
+
+  .step { display:flex; gap:20px; margin-bottom:28px; align-items:flex-start; }
+  .step-num { background:#7C3AED; color:#fff; width:36px; height:36px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:16px; font-weight:900; flex-shrink:0; margin-top:2px; }
+  .step-body h3 { font-size:17px; font-weight:700; color:#1B2A4A; margin-bottom:6px; }
+  .step-body p { color:#555; font-size:14px; }
+  .step-body .path { background:#f0f0f8; border-radius:6px; padding:6px 12px; font-size:13px; color:#7C3AED; font-weight:600; display:inline-block; margin-top:6px; direction:ltr; }
+  .step-body .note { background:#fff8e1; border-right:3px solid #f59e0b; padding:10px 14px; border-radius:4px; margin-top:10px; font-size:13px; color:#92400e; }
+  .step-body .warning { background:#fee2e2; border-right:3px solid #dc2626; padding:10px 14px; border-radius:4px; margin-top:10px; font-size:13px; color:#991b1b; font-weight:600; }
+  .step-body .success { background:#f0fdf4; border-right:3px solid #22c55e; padding:10px 14px; border-radius:4px; margin-top:10px; font-size:13px; color:#166534; }
+
+  .email-preview { border:1px solid #e5e7eb; border-radius:12px; overflow:hidden; margin:20px 0; box-shadow:0 2px 8px rgba(0,0,0,0.08); }
+  .email-preview-header { background:linear-gradient(135deg,#1B2A4A,#2d3f6b); padding:20px; text-align:center; color:#fff; }
+  .email-preview-header .emoji { font-size:36px; margin-bottom:8px; }
+  .email-preview-header h4 { font-size:18px; font-weight:700; margin-bottom:4px; }
+  .email-preview-header p { font-size:13px; color:rgba(255,255,255,0.7); }
+  .email-preview-body { padding:20px; background:#fff; }
+  .event-list { background:#f8f9fc; border:1px solid #e8eaf0; border-radius:8px; padding:14px 18px; }
+  .event-list-title { font-size:12px; color:#7C3AED; font-weight:700; margin-bottom:10px; }
+  .event-item { font-size:14px; color:#1B2A4A; padding:4px 0; }
+  .open-btn { background:#7C3AED; color:#fff; padding:10px 28px; border-radius:8px; font-size:14px; font-weight:700; display:inline-block; margin-top:14px; text-decoration:none; }
+
+  .two-col { display:grid; grid-template-columns:1fr 1fr; gap:20px; margin:20px 0; }
+  .email-mini { border:1px solid #e5e7eb; border-radius:10px; overflow:hidden; }
+  .email-mini-header { padding:14px; text-align:center; }
+  .email-mini-header.has { background:linear-gradient(135deg,#1B2A4A,#2d3f6b); }
+  .email-mini-header.free { background:linear-gradient(135deg,#1B2A4A,#2d3f6b); }
+  .email-mini-header .emoji { font-size:28px; display:block; margin-bottom:6px; }
+  .email-mini-header h5 { color:#fff; font-size:15px; }
+  .email-mini-body { padding:14px; background:#fff; font-size:13px; color:#555; }
+
+  .schedule-box { background:#f8f9fc; border:1px solid #e8eaf0; border-radius:10px; padding:20px; margin:20px 0; }
+  .schedule-box h4 { color:#1B2A4A; font-weight:700; margin-bottom:12px; font-size:16px; }
+  .schedule-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid #e8eaf0; }
+  .schedule-row:last-child { border:none; }
+  .schedule-label { color:#555; font-size:14px; }
+  .schedule-value { color:#7C3AED; font-weight:700; font-size:14px; }
+
+  .tip-box { background:linear-gradient(135deg,#f5f3ff,#ede9fe); border:1px solid #c4b5fd; border-radius:10px; padding:16px 20px; margin:20px 0; }
+  .tip-box h4 { color:#7C3AED; font-weight:700; margin-bottom:6px; }
+  .tip-box p { color:#4c1d95; font-size:14px; }
+
+  .flow-diagram { display:flex; align-items:center; justify-content:center; gap:8px; margin:20px 0; flex-wrap:wrap; }
+  .flow-module { background:#1B2A4A; color:#fff; padding:8px 14px; border-radius:8px; font-size:12px; font-weight:700; text-align:center; }
+  .flow-module small { display:block; color:rgba(255,255,255,0.6); font-size:10px; font-weight:400; }
+  .flow-arrow { color:#7C3AED; font-size:20px; font-weight:900; }
+
+  footer { text-align:center; padding:40px; color:#aaa; font-size:13px; border-top:1px solid #e5e7eb; margin-top:40px; }
+  footer strong { color:#7C3AED; }
+</style>
+</head>
+<body>
+
+<!-- COVER -->
+<div class="cover">
+  <div class="cover-badge">Make.com Blueprint v7</div>
+  <h1>☀️ דשבורד בוקר</h1>
+  <h2>מדריך התקנה מלא</h2>
+  <div class="cover-divider"></div>
+  <div class="cover-features">
+    <div class="cover-stat"><div class="cover-stat-num">5</div><div class="cover-stat-label">מודולים בלבד</div></div>
+    <div class="cover-stat"><div class="cover-stat-num">~3</div><div class="cover-stat-label">credits ליום</div></div>
+    <div class="cover-stat"><div class="cover-stat-num">0</div><div class="cover-stat-label">API keys נדרשים</div></div>
+  </div>
+  <div class="cover-footer">
+    <p>יצר: <strong>גיא כהן</strong> | guycohenai.com</p>
+  </div>
+</div>
+
+<!-- PAGE 1: WHAT IS THIS -->
+<div class="page">
+  <h2 class="section-title">מה זה דשבורד בוקר?</h2>
+  <p class="section-intro">אוטומציה שפועלת אחת ליום ושולחת אליך מייל עם כל הפגישות של היום. לא צריך לפתוח את Google Calendar בכל בוקר.</p>
+
+  <!-- Flow -->
+  <div class="flow-diagram">
+    <div class="flow-module">📅<small>Google Calendar</small></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-module">📝<small>Text Aggregator</small></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-module">🧭<small>Router</small></div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-module">✉️<small>Gmail</small><small style="color:#22c55e">יש / אין</small></div>
+  </div>
+
+  <div class="two-col">
+    <div class="email-mini">
+      <div class="email-mini-header has">
+        <span class="emoji">🌙</span>
+        <h5>יש פגישות היום</h5>
+      </div>
+      <div class="email-mini-body">
+        <div style="background:#f8f9fc;border-radius:6px;padding:10px;margin-bottom:10px;font-size:12px;color:#1B2A4A">
+          <div style="color:#7C3AED;font-size:11px;margin-bottom:6px">📅 האירועים שלך היום</div>
+          09:00 - סטנדאפ צוות<br>
+          14:00 - שיחה עם לקוח<br>
+          16:30 - פגישת מכירות
+        </div>
+        <div style="text-align:center"><span style="background:#7C3AED;color:#fff;padding:6px 16px;border-radius:6px;font-size:12px">📅 פתח את היומן</span></div>
+      </div>
+    </div>
+    <div class="email-mini">
+      <div class="email-mini-header free">
+        <span class="emoji">🎉</span>
+        <h5>יום פנוי לגמרי!</h5>
+      </div>
+      <div class="email-mini-body" style="text-align:center;padding:20px 14px">
+        <div style="font-size:36px;margin-bottom:8px">🏖️</div>
+        <div style="font-size:14px;color:#1B2A4A;font-weight:700;margin-bottom:4px">אין פגישות היום</div>
+        <div style="font-size:12px;color:#666">יום פתוח לעבודה ממוקדת</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Requirements -->
+  <h2 class="section-title" style="margin-top:32px">מה צריך לפני שמתחילים</h2>
+  <p class="section-intro"></p>
+  <div class="step">
+    <div class="step-num">✓</div>
+    <div class="step-body">
+      <h3>חשבון Make.com (חינמי)</h3>
+      <p>התוכנית החינמית כוללת 1,000 credits לחודש. דשבורד בוקר צורך ~3 credits ביום (~90/חודש) — בנוח בתוך הלימיט.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">✓</div>
+    <div class="step-body">
+      <h3>חשבון Google (Gmail + Calendar)</h3>
+      <p>כל חשבון Google רגיל עובד. לא נדרשים API keys — Make מתחברת דרך OAuth בלחיצת כפתור.</p>
+    </div>
+  </div>
+  <div class="step">
+    <div class="step-num">✓</div>
+    <div class="step-body">
+      <h3>קובץ Blueprint</h3>
+      <p>הורד מהקישור: <span class="path">guycoful.github.io/make-morning-dashboard</span></p>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 2: INSTALLATION -->
+<div class="page page-break">
+  <h2 class="section-title">התקנה שלב אחר שלב</h2>
+  <p class="section-intro">כל התהליך אורך כ-5 דקות.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h3>הורדת הקובץ</h3>
+      <p>לך לכתובת ולחץ "הורדת התבנית" — יירד קובץ <code>morning_dashboard_v7.json</code></p>
+      <div class="path">guycoful.github.io/make-morning-dashboard</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h3>ייבוא ב-Make</h3>
+      <p>ב-Make, לחץ על <strong>Scenarios</strong> בתפריט הצד ← <strong>Create a new scenario</strong> ← לחץ על שלוש הנקודות <strong>(...)</strong> בפינה ← <strong>Import Blueprint</strong> ← בחר את הקובץ שהורדת.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h3>חיבור Google Calendar</h3>
+      <p>לאחר הייבוא, לחץ על המודול הראשון (📅 Google Calendar) ← <strong>Add connection</strong> ← התחבר עם חשבון Google שלך ← אשר הרשאות.</p>
+      <div class="success">✓ Make תציג "Connected" ירוק כשהחיבור מוצלח</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">4</div>
+    <div class="step-body">
+      <h3>חיבור Gmail</h3>
+      <p>לחץ על אחד ממודולי Gmail (route ימין ושמאל) ← <strong>Add connection</strong> ← התחבר עם אותו חשבון Google. חזור על זה לשני מודולי Gmail.</p>
+      <div class="note">💡 אפשר להשתמש באותו חיבור Google לשניהם.</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">5</div>
+    <div class="step-body">
+      <h3>הפעלת בדיקה</h3>
+      <p>לחץ <strong>Run once</strong> (פינה שמאל תחתון). תוך שניות תקבל מייל — רשימת הפגישות של היום או הודעת יום חופשי.</p>
+      <div class="success">✓ אם המייל הגיע — הכל עובד!</div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE 3: SCHEDULING -->
+<div class="page page-break">
+  <h2 class="section-title">הגדרת תזמון יומי</h2>
+  <p class="section-intro">זה השלב הכי חשוב — בלי תזמון נכון, האוטומציה לא תפעל לבד.</p>
+
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body">
+      <h3>פתיחת Schedule Settings</h3>
+      <p>בתחתית המסך, לחץ על <strong>Scheduling</strong> (או על שעון הזמן ליד "Run once").</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body">
+      <h3>הגדרת זמן קבוע — Advanced Scheduling</h3>
+      <p>ב-Schedule Settings:</p>
+      <p style="margin-top:8px">1. שנה את "Run scenario" ל: <strong>At regular intervals</strong></p>
+      <p>2. גלול למטה ← <strong>Advanced scheduling</strong> ← <strong>+ Add item</strong></p>
+      <p>3. הגדר:</p>
+      <div class="schedule-box" style="margin-top:12px">
+        <div class="schedule-row"><span class="schedule-label">Time of day</span><span class="schedule-value">07:00</span></div>
+        <div class="schedule-row"><span class="schedule-label">Days</span><span class="schedule-value">ימים א-ה (או כל הימים)</span></div>
+      </div>
+      <div class="warning">⚠️ אל תשאיר על "Every 15 minutes" — זה ישלח 96 מיילים ביום!</div>
+      <div class="success">✓ עם Advanced Scheduling תקבל בדיוק מייל אחד כל בוקר ב-07:00</div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body">
+      <h3>הפעלת הסצנריו</h3>
+      <p>לחץ <strong>Save</strong> ← הפעל את הטוגל <strong>Active</strong> (צבע כחול/סגול). מהרגע הזה האוטומציה פועלת לבד.</p>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <h4>💡 טיפ: תזמון לפי ימי עבודה בלבד</h3>
+    <p>ב-Advanced Scheduling אפשר לסמן רק ימים א-ה ולהוציא שישי-שבת. כך לא תקבל מייל בסופ"ש.</p>
+  </div>
+
+  <h2 class="section-title" style="margin-top:36px">שאלות נפוצות</h2>
+
+  <div class="step" style="margin-top:20px">
+    <div class="step-num">?</div>
+    <div class="step-body">
+      <h3>הברכה לפי השעה — איך זה עובד?</h3>
+      <p>האוטומציה בודקת את השעה ברגע ההפעלה: לפני 12:00 = בוקר טוב, 12:00-17:00 = צהריים טובים, אחרי 17:00 = ערב טוב. לכן מומלץ להפעיל ב-07:00 בבוקר.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">?</div>
+    <div class="step-body">
+      <h3>כמה credits זה צורך?</h3>
+      <p>כ-3 credits להפעלה (1 לחיפוש Calendar + 1 לאגרגציה + 1 לשליחת Gmail). עם תוכנית חינמית של 1,000 credits לחודש יכולים להפעיל 333 פעמים — יותר ממספיק.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-num">?</div>
+    <div class="step-body">
+      <h3>אני לא רואה אירועים במייל</h3>
+      <p>וודא שבחשבון Google Calendar שחיברת יש אירועים היום. ייתכן שהאירועים נמצאים בלוח שנה שני (לדוגמה "Work" במקום "Primary"). האוטומציה מחפשת ב-primary calendar בלבד.</p>
+    </div>
+  </div>
+
+  <footer>
+    <p>יצר <strong>גיא כהן</strong> | <strong>guycohenai.com</strong> | קהילת AI ואוטומציות</p>
+    <p style="margin-top:6px">Make.com Blueprint v7 | תאריך: אפריל 2026</p>
+  </footer>
+</div>
+
+</body>
+</html>
